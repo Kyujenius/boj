@@ -1,25 +1,29 @@
 function solution(array) {
     var answer = 0;
-    const frequency = array.reduce((acc,currentValue)=>{
-        if(!acc[currentValue]) {
-            acc[currentValue] = 0;
+    let object = {};
+    array.forEach((value) => {
+        if(!object[value]) {
+            object[value] = 1
+        }else {
+            object[value] += 1;
         }
-        acc[currentValue] += 1;
-        return acc
-    },{});
+    })
+    console.log(object);
+    const entries = Object.entries(object).sort(([key,value], [key2,value2]) => {
+        return value2 - value;
+    })
+    console.log(entries);
+    const frequencyArray = Object.values(Object.fromEntries(entries));
+    console.log(frequencyArray)
+    const maxNumber = Math.max(...frequencyArray);
+    const filteredEntries = entries.filter(([key,value]) => value == maxNumber);
+    console.log(filteredEntries);
     
-    const max = Math.max(...Object.values(frequency));
-    
-    console.log(max);
-    const frequencyArray = Object.entries(frequency);
-
-    const maxArray = frequencyArray.filter(([key,value])=> value === max);
-    if(maxArray.length > 1) {
-        answer = -1;
-    } else{
-        console.log(maxArray[0][0])
-        answer = parseInt(maxArray[0][0]);
+    if(filteredEntries.length > 1) {
+        return -1;
+    }else {
+        console.log(filteredEntries[0][0]);
+        answer = parseInt(filteredEntries[0][0]);
     }
-    
     return answer;
 }
