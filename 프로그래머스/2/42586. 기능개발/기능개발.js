@@ -1,20 +1,19 @@
 function solution(progresses, speeds) {
-    var answer = [];
-    let days = [];
-    let shifted = 0;
-    for(let i = 0 ; i < progresses.length; i++) {
-        days.push(Math.ceil((100 - progresses[i])/speeds[i]));
-    }
-    let count =0;
-    while(days.length >0) {
-        shifted = Math.max(shifted, days.shift());
-        count++;
-        if(shifted >=days[0]) {
-            continue;
-        }else {
-            answer.push(count)
-            count=0;
+    let answer = [0];
+    let days = progresses.map((progress, index) => Math.ceil((100 - progress) / speeds[index]));
+    let maxDay = days[0];
+    let j = 0;
+    
+    for(let i = 0; i< days.length; i++){
+        //가장 큰 날보다 크거나 같으면 answer[j] 값 +1
+        if(days[i] <= maxDay) {
+            answer[j] += 1;
+        } else {
+        //가장 큰 날보다 작으면 answer[j] 값 +1
+            maxDay = days[i];
+            answer[++j] = 1;
         }
     }
+
     return answer;
 }
