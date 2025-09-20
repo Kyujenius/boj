@@ -1,36 +1,33 @@
 function solution(answers) {
-    var answer = [];
-    let person1Score = 0;
-    let person2Score = 0;
-    let person3Score = 0;
-    let scoreArray = [];
-    const person1= [1,2,3,4,5];
-    const person2= [2,1,2,3,2,4,2,5];
-    const person3= [3,3,1,1,2,2,4,4,5,5];
+    const firstPerson = [1, 2, 3, 4, 5];
+    const secondPerson = [2, 1, 2, 3, 2, 4, 2, 5];
+    const thirdPerson = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
     
-    answers.forEach((number,index,array) => {
-        if(number == person1[index % 5]) {
-            person1Score +=1;
+    let firstCount = 0;
+    let secondCount = 0;
+    let thirdCount = 0;
+    answers.forEach((value,index)=> {
+        if(value == firstPerson[index % firstPerson.length]) {
+            firstCount++;
         }
-        if(number == person2[index % 8]) {
-            person2Score +=1;
+        if(value == secondPerson[index % secondPerson.length]){
+            secondCount++;
         }
-        if(number == person3[index % 10]) {
-            person3Score +=1;
-        }
-    })
-    const maxScore = Math.max(person1Score,person2Score, person3Score);
-    
-    scoreArray.push(person1Score,person2Score, person3Score);
-    
-    console.log(scoreArray);
-    scoreArray.forEach((number,index,array) => {
-        if(number == maxScore) {
-            answer.push(index+1);
+        if(value == thirdPerson[index % thirdPerson.length]) {
+            thirdCount++;
         }
     })
     
-    answer.sort((a,b) => a-b);
+    const maxCount = Math.max(firstCount,secondCount,thirdCount);
+    const countArray = [firstCount,secondCount,thirdCount];
+    let answer = [];
     
+    // 가장 높은 점수를 가진 사람을 찾습니다.
+    for (let i = 0; i < countArray.length; i++) {
+        if (countArray[i] === maxCount) {
+            answer.push(i + 1); // 인덱스(0, 1, 2)에 1을 더해 사람 번호(1, 2, 3)로 변환
+        }
+    }
+
     return answer;
 }
