@@ -1,21 +1,17 @@
 function solution(s){
-    var answer = true;
-
-    const new_stack = [];
-    
-
+    let answer = true;
+    let stack = [];
     for(let i = 0 ; i<s.length; i++) {
-        if(s[i] == ")") {
-            const result = new_stack.pop();
-            if(result == undefined) {
-                answer = false;
-                break;
-            }
+        if(s[i] === "(") {
+            stack.push(s[i]);
         }else {
-            new_stack.push("a")
+            if(stack.pop()== undefined) {
+                return false
+            }
         }
     }
-    if(new_stack.length>0) {
+
+    if(stack.length !== 0) {
         answer = false;
     }
 
