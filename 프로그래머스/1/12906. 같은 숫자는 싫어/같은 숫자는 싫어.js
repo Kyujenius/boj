@@ -1,13 +1,10 @@
 function solution(arr)
 {
-    var answer = [];
-    while(arr.length > 0) {
-        const popped = arr.pop();        
-        if(answer[answer.length-1] !== popped) {
-            answer.push(popped)
+    let stack = [];
+    arr.forEach((value,index) => {
+        if(stack[stack.length-1] != value) {
+            stack.push(value)    
         }
-    }
-    
-    
-    return answer.reverse();
+    })
+    return stack;
 }
