@@ -1,17 +1,17 @@
 function solution(arr1, arr2) {
-    var answer = Array(arr1.length).fill(0).map(()=> {return Array(arr2[0].length).fill(0)});
+    const answer = Array(arr1.length).fill(0).map(() => Array(arr2[0].length).fill(0));
+
+    // i: arr1의 행 인덱스
     for (let i = 0; i < arr1.length; i++) {
-        // j: 결과 행렬의 열
+        // j: arr2의 열 인덱스
         for (let j = 0; j < arr2[0].length; j++) {
-            let sum = 0; // answer[i][j]의 값을 계산하여 담을 변수
-            // k: 점곱(dot product) 계산을 위한 인덱스
+            // k: 내적(dot product)을 위한 인덱스
             for (let k = 0; k < arr1[0].length; k++) {
-                // arr1의 i행과 arr2의 j열의 원소들을 순차적으로 곱하고 더한다.
-                sum += arr1[i][k] * arr2[k][j];
+                // answer[i][j]는 arr1의 i행과 arr2의 j열의 내적입니다.
+                answer[i][j] += arr1[i][k] * arr2[k][j];
             }
-            // 계산된 합계를 결과 행렬의 올바른 위치에 할당
-            answer[i][j] = sum;
         }
     }
+    
     return answer;
 }
