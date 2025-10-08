@@ -1,19 +1,27 @@
 function solution(progresses, speeds) {
-    let answer = [0];
-    let days = progresses.map((progress, index) => Math.ceil((100 - progress) / speeds[index]));
-    let maxDay = days[0];
-    let j = 0;
-    
-    for(let i = 0; i< days.length; i++){
-        //가장 큰 날보다 크거나 같으면 answer[j] 값 +1
-        if(days[i] <= maxDay) {
-            answer[j] += 1;
-        } else {
-        //가장 큰 날보다 작으면 answer[j] 값 +1
-            maxDay = days[i];
-            answer[++j] = 1;
+    var answer = [];
+    const remainProgresses = progresses.map((value)=> {
+        return 100 - value;
+    })
+    const completeDayArray = remainProgresses.map((value,index)=> {
+        return Math.ceil(value / speeds[index]);
+    })
+    console.log(completeDayArray);
+    let counter = 1;
+    let maxNum = completeDayArray[0];
+    for(let i = 0; i< completeDayArray.length; i++) {
+        if(maxNum < completeDayArray[i+1]) {
+            answer.push(counter);
+            counter = 1;
+            maxNum = completeDayArray[i+1];
+            // console.log(maxNum);
+        }else if(i == completeDayArray.length-1) {
+            answer.push(counter);
+            return answer;
+        }else{
+            counter++;
+            console.log(`maxNum >= completeDayArray[i] : ${maxNum} >= ${completeDayArray[i]}`);
         }
     }
-
     return answer;
 }
