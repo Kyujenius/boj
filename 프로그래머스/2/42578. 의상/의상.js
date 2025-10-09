@@ -2,17 +2,16 @@ function solution(clothes) {
     var answer = 0;
     const closet = {};
     clothes.forEach((value)=> {
-        const [cloth, theme] = value;
-        if(!closet[theme]) {
-            closet[theme] = [cloth]
+        const [wear, theme] = value;
+        if(closet[theme]) {
+            closet[theme].push(wear)
         }else {
-            closet[theme].push(cloth)
+            closet[theme] = [wear];
         }
     })
-    console.log(closet);
-    const closetValues = Object.values(closet)
-    let counter = 1;
-    closetValues.forEach((value)=> counter = counter * (value.length+1));
-
-    return counter-1 ;
+    const closetValue = Object.values(closet);
+    answer = closetValue.reduce((acc,cur)=> {
+        return acc *= (cur.length + 1)
+    },1);
+    return answer-1;
 }
