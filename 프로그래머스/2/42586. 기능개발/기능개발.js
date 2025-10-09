@@ -1,27 +1,23 @@
 function solution(progresses, speeds) {
     var answer = [];
-    const remainProgresses = progresses.map((value)=> {
-        return 100 - value;
-    })
-    const completeDayArray = remainProgresses.map((value,index)=> {
-        return Math.ceil(value / speeds[index]);
-    })
-    console.log(completeDayArray);
+    const remainArray = progresses.map((value, index)=> {
+        return Math.ceil((100 - value)/speeds[index]);
+    });
     let counter = 1;
-    let maxNum = completeDayArray[0];
-    for(let i = 0; i< completeDayArray.length; i++) {
-        if(maxNum < completeDayArray[i+1]) {
+    let maxNum = remainArray[0];
+    console.log(remainArray);
+    
+    remainArray.forEach((value, index, array)=> {
+        if(index == array.length-1) {
+            answer.push(counter)
+        }else if(maxNum < array[index+1]) {
+            maxNum = array[index+1];
+            console.log(`maxNum: ${maxNum}, counter: ${counter}`)
             answer.push(counter);
             counter = 1;
-            maxNum = completeDayArray[i+1];
-            // console.log(maxNum);
-        }else if(i == completeDayArray.length-1) {
-            answer.push(counter);
-            return answer;
-        }else{
+        }else {
             counter++;
-            console.log(`maxNum >= completeDayArray[i] : ${maxNum} >= ${completeDayArray[i]}`);
         }
-    }
+    })
     return answer;
 }
