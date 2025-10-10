@@ -1,15 +1,11 @@
 function solution(phone_book) {
-    let answer = true;
-    const headArray = [];
+    var answer = true;
     phone_book.sort();
     console.log(phone_book);
-    for(let i = 0; i<phone_book.length; i++) {
-        // console.log(`value: ${value}, head: ${head}`)
+    for(let i = 1 ; i<phone_book.length; i++) {
         if(phone_book[i].startsWith(phone_book[i-1])){
-            answer = false;
-            return answer;
+            return false;
         }
     }
-        // console.log(`headArray: ${headArray}`);
     return answer;
 }
