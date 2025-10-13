@@ -1,23 +1,30 @@
 function solution(priorities, location) {
-    // value 와 내 거인지 아는 list 생성
-    let list = priorities.map((value,index)=>({
-        isMine : index === location,
-        value : value
-    }));
+    var answer = 0;
+    const priorityArray = [];
+    priorities.forEach((value,index)=> {
+        priorityArray.push({
+                priority : value,
+                isMine : index === location
+        })
+    })
+    console.log(priorityArray);
     
-    let count = 0;        
-    console.log(list);
-    while(true){
-       const current = list.shift();
-        if(list.some((t)=> t.value > current.value)) {
-            list.push(current);
+    let counter = 0;
+    
+    while(priorityArray.length>0) {
+        const shifted = priorityArray.shift();
+        //더 큰 게 하나라도 있으면
+        if(priorityArray.some((value)=> shifted.priority < value.priority)) {
+            priorityArray.push(shifted);
         }else {
-            count++;
-            if(current.isMine) {
-                return count;
+            counter++;
+            // console.log(priorityArray);
+            if(shifted.isMine == true) {
+                return counter;
             }
         }
+
     }
+    
+    return answer;
 }
-
-
