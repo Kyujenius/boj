@@ -1,30 +1,32 @@
 function solution(priorities, location) {
     var answer = 0;
     const priorityArray = [];
-    priorities.forEach((value,index)=> {
+    let mineNumber = 0;
+    priorities.forEach((value,index) => {
         priorityArray.push({
-                priority : value,
-                isMine : index === location
+            "number" : value,
+            "isMine" : index === location
         })
-    })
-    console.log(priorityArray);
-    
-    let counter = 0;
-    
-    while(priorityArray.length>0) {
-        const shifted = priorityArray.shift();
-        //더 큰 게 하나라도 있으면
-        if(priorityArray.some((value)=> shifted.priority < value.priority)) {
-            priorityArray.push(shifted);
-        }else {
-            counter++;
-            // console.log(priorityArray);
-            if(shifted.isMine == true) {
-                return counter;
-            }
+        if(index === location) {
+            mineNumber = value;
         }
-
+    });
+    
+    while(true) {
+        const obj = priorityArray.shift();
+        if(priorityArray.some((value) => obj.number < value.number)) {
+           priorityArray.push(obj);
+        }else {
+           answer++;
+           if(obj.isMine) {
+               return answer;
+           }
+        }
     }
+    
+    
+    
+    
     
     return answer;
 }
