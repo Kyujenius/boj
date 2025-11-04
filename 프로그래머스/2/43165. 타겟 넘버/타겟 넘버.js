@@ -1,18 +1,19 @@
 function solution(numbers, target) {
     var answer = 0;
-    
-    
-    function dfs(index,acc) {
-        if(index === numbers.length) {
-            if(acc === target) {
+    function dfs(index, currentSum) {
+        if(index !== numbers.length-1) {
+            dfs(index+1, currentSum + numbers[index]);
+            dfs(index+1, currentSum - numbers[index]);    
+        }else {
+            if(currentSum + numbers[index] == target) {
+            answer++;
+            }
+            if(currentSum -numbers[index] == target) {
                 answer++;
             }
-        }else {
-            dfs(index+1, acc + numbers[index]);
-            dfs(index+1, acc - numbers[index]);
         }
+        
     }
-    dfs(0,0);
-    
+    dfs(0,0)
     return answer;
 }
