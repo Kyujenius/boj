@@ -1,40 +1,39 @@
 function solution(begin, target, words) {
     var answer = 0;
-    const n = words.length;
-    let queue = [];
-    queue.push([begin, 0]);
-    
-    function compare(a,b) {
+    const queue= [];
+    const visited = Array(words.length).fill(false);
+    function isWordDifferentByOne(wordA,wordB) {
         let count = 0;
-        const length = a.length;
-        for(let i =0; i<length; i++) {
-            if(a[i] == b[i]) {
+        for(let i = 0 ; i<wordA.length; i++) {
+            if(wordA[i] !== wordB[i]){
                 count++;
-            }            
-        }
-        if(count == length-1) {
-            console.log('a와 b는 변환가능.', a,b)
-            return true;
-        }else {
-            return false;
-        }
-    }
-    
-    while(queue.length >0) {
-        let [word, count] = queue.shift();
-        // console.log(word,count);
-        if(word == target) {
-            // console.log('똑같다.', target, word)
-            return count;
-        }
-
-        for(let i = 0 ; i<words.length; i++) {
-            if(compare(word,words[i])) {
-                queue.push([words[i], ++count]);
-                words = words.filter((value)=> value !==words[i]);
-                
             }
         }
+        if(count > 1) {
+            return false;
+        }else if(count ==1) {
+            return true;
+        }
     }
+    queue.push([begin,0]);
+    while(queue.length>0) {
+        const [word, count] = queue.shift()
+        if(count == words.length) {
+            return 0;
+        }
+        if(word == target){
+            return count;
+        }else {
+            for (let i = 0; i < words.length; i++) {
+                // 아직 방문하지 않았고, 한 글자 차이인지 확인
+                if (!visited[i] && isWordDifferentByOne(word, words[i])) {
+                    visited[i] = true; // 방문 처리
+                    queue.push([words[i], count + 1]); // 큐에 다음 단어와 1 증가한 단계를 넣음
+                }
+            }        
+        }
+
+    }
+    
     return answer;
 }
