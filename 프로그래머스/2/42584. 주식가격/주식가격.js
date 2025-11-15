@@ -1,14 +1,18 @@
 function solution(prices) {
     var answer = [];
-    prices.forEach((price, index, arr)=> {
-        const stack = [] ;
-        for(let i = index; i<arr.length-1; i++) {
-            stack.push(arr[i+1])
-            if(price > arr[i+1]) {
+    const arrLength = prices.length;
+    prices.forEach((value,index,array)=> {
+        let counter =0;
+        for(let i = index+1; i<arrLength; i++) {
+            if(value <= array[i]) {     
+                counter ++;    
+                // console.log("counter up", counter);
+            }else {
+                    counter++;
                 break;
             }
         }
-                        answer.push(stack.length);
+        answer.push(counter);
 
     })
     return answer;
