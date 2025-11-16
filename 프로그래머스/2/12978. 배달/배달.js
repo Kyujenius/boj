@@ -1,6 +1,8 @@
 function solution(N, road, K) {
     var answer = 0;
     const graph = {};
+    const accDist = Array(N+1).fill(Infinity);
+    const queue = [];
     road.forEach((value) => {
         const [from,to,dist] = value;
         if(graph[from] == undefined) {
@@ -14,27 +16,23 @@ function solution(N, road, K) {
             graph[to].push({to:from, dist:dist});
         }
     })
-    const queue = [{to:1,dist:0}];
-    const accDist = Array(N+1).fill(Infinity);
-    // console.log(accDist);
+    console.log(graph);
     accDist[1] = 0;
-    while(queue.length >0) {
-        const {to} = queue.pop();
-        graph[to].forEach((next) => {
-            const toDist = accDist[to] + next.dist;
-            if(accDist[next.to] > toDist) {
-                accDist[next.to] = toDist;
+    queue.push({to:1,dist:0});
+    while(queue.length>0){
+        const {to} =queue.pop();
+        graph[to].forEach((next)=> {
+            const acc = accDist[to] + next.dist;
+            if(accDist[next.to] > acc) {
+                accDist[next.to] = acc;
                 queue.push(next);
             }
         })
     }
     // console.log(accDist);
     
-    accDist.forEach((value)=>{
-        if(value <=K) {
-            answer++;
-        }
+    accDist.forEach((value) => {
+        if(value<= K) answer ++;
     })
-
     return answer;
 }
