@@ -7,7 +7,8 @@ function solution(land) {
         land[i][2] += Math.max(land[i-1][1], land[i-1][0],land[i-1][3]);
         land[i][3] += Math.max(land[i-1][1], land[i-1][2],land[i-1][0]);
     }
-    
-    answer = Math.max(...land[land.length-1]);
+    console.log(land);
+
+    answer = Math.max(...land[land.length-1])
     return answer;
 }
