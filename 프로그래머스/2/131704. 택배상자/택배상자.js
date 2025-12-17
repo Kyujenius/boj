@@ -1,18 +1,19 @@
 function solution(order) {
     var answer = 0;
+    let count = 0;
     const subContainer = [];
-    const length = order.length;
-    let counter =0;
-    
-    for(let i = 1; i<=length; i++) {
-        subContainer.push(i);
-        // console.log(`[${i}], ${subContainer}`);       
-        while(subContainer[subContainer.length-1] == order[counter] && subContainer.length >0) {
-            subContainer.pop();
-            counter++;
+    for(let i = 1 ; i<=order.length; i++) {
+        if(i == order[count]) {
             answer++;
+            count++;
+        }else {
+            subContainer.push(i);
+        }
+        while(subContainer[subContainer.length-1] == order[count] && subContainer.length > 0) {
+            answer++;
+            subContainer.pop();
+            count++;
         }
     }
-    
     return answer;
 }
