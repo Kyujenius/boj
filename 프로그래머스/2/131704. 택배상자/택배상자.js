@@ -3,12 +3,7 @@ function solution(order) {
     let count = 0;
     const subContainer = [];
     for(let i = 1 ; i<=order.length; i++) {
-        if(i == order[count]) {
-            answer++;
-            count++;
-        }else {
             subContainer.push(i);
-        }
         while(subContainer[subContainer.length-1] == order[count] && subContainer.length > 0) {
             answer++;
             subContainer.pop();
