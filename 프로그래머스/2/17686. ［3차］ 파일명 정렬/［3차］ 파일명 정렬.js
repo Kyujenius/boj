@@ -1,31 +1,23 @@
 function solution(files) {
-    var answer = [];
-    files.sort((a,b) => {
-        
-        const regex = /^(\D+)(\d+)/;
+    const regex = /^(\D+)(\d+)/;
+    files.sort((a,b)=> {
         const aMatch = a.match(regex);
         const bMatch = b.match(regex);
         // console.log(aMatch,bMatch);
+        const aHeader = aMatch[1].toUpperCase();
+        const bHeader = bMatch[1].toUpperCase();
         
-        const aHead = aMatch[1].toLowerCase();
-        const aNumber = parseInt(aMatch[2]);
-        const aTail = aMatch[3];
+        const aBody = parseInt(aMatch[2]);
+        const bBody = parseInt(bMatch[2]);
         
-        const bHead = bMatch[1].toLowerCase();
-        const bNumber = parseInt(bMatch[2]);
-        const bTail = bMatch[3];
+        if(aHeader > bHeader) return 1;
+        if(aHeader < bHeader) return -1;
         
-
-        // 2. HEAD 비교 (오름차순)
-        if (aHead < bHead) return -1;
-        if (aHead > bHead) return 1;
-
-        // 3. HEAD가 같다면 NUMBER 비교 (오름차순)
-        if (aNumber < bNumber) return -1;
-        if (aNumber > bNumber) return 1;
-        
+        if(aBody > bBody) return 1;
+        if(aBody < bBody) return -1;
         
         return 0;
+        
     })
     return files;
 }
