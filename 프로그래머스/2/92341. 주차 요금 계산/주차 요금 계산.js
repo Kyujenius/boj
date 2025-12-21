@@ -1,49 +1,47 @@
 function solution(fees, records) {
-    var answer = [];
+    var result = [];
     const defaultTime = fees[0];
     const defaultFee = fees[1];
     const time = fees[2];
     const timePerFee = fees[3];
-    
-    let cars = {};
-    //-------------
-    
+    const carObj = {};
     records.forEach((record,index,array)=> {
-        const recordSplitted = record.split(" ");
-        const [hour,minute] = recordSplitted[0].split(":");
-        const carNumber = recordSplitted[1];
-        const inOut = recordSplitted[2];
-        let minutes = parseInt(hour) * 60 + parseInt(minute);
-        if(inOut == "IN") {
-           minutes = minutes  * (-1);
-        }
-        if(cars[carNumber]) {
-            cars[carNumber][0] += minutes;
-            cars[carNumber][1] = inOut;
+        const [time, carNumber,inOut]= record.split(" ");
+        const [hour,minute] = time.split(":");
+        let totalMinute = parseInt(hour) * 60 + parseInt(minute);
+        if(inOut === "IN") totalMinute = totalMinute * (-1);
+        if(!carObj[carNumber]) {
+            carObj[carNumber] = [totalMinute,inOut];
         }else {
-            cars[carNumber] = [minutes, inOut];
+            carObj[carNumber][0] += totalMinute;
+            carObj[carNumber][1] = inOut;
         }
     })
     
-    for(const c in cars) {
-       if(cars[c][1] == "IN") {
-           cars[c][0] += 23 * 60 + 59;
-       }
+    //다 끝났는데 IN인 놈들 
+    for(const carKey in carObj) {
+        if(carObj[carKey][1] == "IN") {
+            carObj[carKey][0] += 23*60 + 59;
+            carObj[carKey][1] = "OUT";
+        }
     }
-    const carKeys = Object.keys(cars);
-    carKeys.sort();
     
-//     console.log(cars);
+    console.log(carObj);
     
-//     console.log(carKeys);
+    const keys = Object.keys(carObj);
+    keys.sort();
     
-    carKeys.forEach((key,index,array)=> {
-        const totalTime = cars[key][0];
-        if(totalTime - defaultTime > 0) {
-            answer.push(defaultFee + Math.ceil((totalTime - defaultTime)/time) * timePerFee);
-        } else {
-            answer.push(defaultFee);
+    keys.forEach((key)=> {
+        let answer = Infinity;
+        if(carObj[key][0] - defaultTime < 0) {
+            answer = defaultFee;
+        }else {
+            answer = defaultFee + Math.ceil((carObj[key][0] - defaultTime)/time) * timePerFee
         }
+        result.push(answer);
     })
-    return answer;
+    
+        
+    
+    return result;
 }
