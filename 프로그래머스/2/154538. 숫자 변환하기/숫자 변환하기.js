@@ -2,21 +2,21 @@ function solution(x, y, n) {
     var answer = 0;
     const visited = new Set();
     const queue = [];
+    
     queue.push([x,0]);
-    let index = 0;
-    while(index < queue.length) {
-        const [input, count] = queue[index];
-        if(input == y) return count;
-        const newInput = [input+n, input*2, input*3];
-        if(!visited.has(input) && input < y) {
-            for(let i = 0 ; i<3; i++) {
-                queue.push([newInput[i],count+1]);    
-                visited.add(input);
+    let queueIdx = 0;
+    while(queueIdx < queue.length) {
+        const [number, count] = queue[queueIdx];
+        if(number === y) return count;
+        const newNumber = [number+n, number*2, number*3];
+        for(let i = 0 ; i <3; i++) {
+            if(!visited.has(newNumber[i]) && newNumber[i] <= y) {
+                queue.push([newNumber[i],count+1]);
+                visited.add(newNumber[i]);
             }
         }
-
-        index++
-        // console.log(queue);
+        // console.log(queue)
+        queueIdx++;
     }
     return -1;
 }
