@@ -4,9 +4,9 @@ function solution(routes) {
     
     
     let lastIdx = -30001;
-    // console.log(routes);
+    console.log(routes);
     routes.forEach(([startRoute,endRoute])=> {
-        if(lastIdx < startRoute) {
+        if(lastIdx < endRoute && lastIdx > startRoute) {
             lastIdx = endRoute;
             answer++;
         }
