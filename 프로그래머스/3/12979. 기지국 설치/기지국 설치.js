@@ -1,24 +1,22 @@
 function solution(n, stations, w) {
     var answer = 0;
-    const newStation = [];
-    // 1. 초기 stations 를 기준으로 W씩 전 후로 1 넣어주기 나머지는 0 으로 두기
-    stations.forEach((station) => {
-        let start = station - w
-        let end = station + w ;
-        // console.log(start,end);
-        if(start < 0) start = 0;
-        if(end > n-1) end = n;
-        newStation.push([start,end]);
+    const activeArea = stations.map(a=> {
+        const newStart = a-w < 1 ? 1 : a-w
+        const newEnd = a+w > n ? n : a+w;
+        return [newStart,newEnd]                                      
+    });
+    // console.log(activeArea);
+    
+    answer += Math.ceil((activeArea[0][0]-1) / (1+(2*w)));
+    activeArea.forEach(([a,b], index,array)=> {
+            const nextArea = array[index+1];
+            if(nextArea !== undefined) {
+                const nextStart = nextArea[0];
+                const inActiveArea = nextStart - b-1;
+                answer += Math.ceil(inActiveArea / (1+(2*w)));
+            }
     })
-    // console.log(newStation)
-    answer += Math.ceil((newStation[0][0] -1)/ (1+2*w));
-    newStation.forEach((station,index, array)=> {
-        const nextStation = array[index+1]
-       if(nextStation !== undefined) {
-          answer += Math.ceil((nextStation[0] - station[1] -1) / (1+2*w));
-       }
-    })
-    answer += Math.ceil((n - newStation[newStation.length-1][1])/ (1+2*w));
+    answer += Math.ceil((n - activeArea[activeArea.length-1][1]) / (1+(2*w)));
 
     return answer;
 }
