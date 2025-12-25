@@ -1,46 +1,35 @@
 function solution(genres, plays) {
-    const object = {};
     var answer = [];
-    genres.forEach((value,index) => {
-        if(!object[value]) {
-            object[value] = [{
-                id: index,
-                playTime: plays[index],
-            }]
+    const genreObj = {};
+    genres.forEach((genre,index,array)=> {
+        if(genreObj[genre] == undefined) {
+            genreObj[genre] = {array : [[plays[index],index]],
+                              total: plays[index]};
         }else {
-            object[value].push({
-                id: index,
-                playTime: plays[index],
-            })
+            genreObj[genre].array.push([plays[index],index]);
+            genreObj[genre].total += plays[index];
         }
-    })
-    // console.log(object);
-    const entry = Object.entries(object);
-    entry.sort((a,b)=>{
-        let bSum = 0;
-        let aSum = 0;
-        const bLength = b[1].length;
-        const aLength = a[1].length;
-        for(let i =0  ; i<bLength; i++) {
-            bSum += b[1][i].playTime
-        }
-        for(let i =0  ; i<aLength; i++) {
-            aSum += a[1][i].playTime
-        }
-        return bSum-aSum;
-    })
-    entry.forEach((value)=> {
-        // console.log(value[1]);
-        value[1].sort((a,b)=> {
-            return b.playTime - a.playTime
-        });
-        answer.push(value[1][0].id);
-        if(value[1][1]) {
-            answer.push(value[1][1].id);
-        }
+    });
+    
+    for(const key in genreObj) {
+        genreObj[key].array.sort((a,b)=>{
+            if(a[0] > b[0]) return -1;
+            if(a[0] < b[0]) return 1;
+            return a[1] - b[1];
+        })
+    }
+    const genreEntries = Object.entries(genreObj);
+    
+    genreEntries.sort((a,b)=>b[1].total - a[1].total);
+    console.log(genreEntries);
+    genreEntries.forEach((genreEntry)=> {
+        const genre = genreEntry[0];
+        const genreObj = genreEntry[1];
+        if(genreObj.array[0] !== undefined) answer.push(genreObj.array[0][1]);
+       if(genreObj.array[1] !== undefined) answer.push(genreObj.array[1][1]);
+        
     })
     
-    // console.log(entry[0]);
     
     return answer;
 }
