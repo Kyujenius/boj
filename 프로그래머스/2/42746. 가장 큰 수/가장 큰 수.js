@@ -1,15 +1,14 @@
 function solution(numbers) {
     var answer = '';
     numbers.sort((a,b)=> {
-        let bString = b.toString()
-        let aString = a.toString()
-        const bNum = parseInt(bString+aString);
-        const aNum = parseInt(aString+bString);
-        return bNum - aNum;
+        const aString = a.toString();
+        const bString = b.toString();
+        const aFirstNum = parseInt(aString+bString)
+        const bFirstNum = parseInt(bString+aString);
+        return bFirstNum- aFirstNum  ;
     })
-    answer = numbers.join('');
-    if(answer[0] === '0') {
-        return '0';
+    if(numbers[0] === 0) {
+        return '0'
     }
-    return answer;
+    return numbers.join('');
 }
