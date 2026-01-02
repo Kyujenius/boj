@@ -1,35 +1,27 @@
 function solution(book_time) {
-    //answer 은 가변하는 방의 수로 보는 것이 포인트같음 
     var answer = 0;
-    
-    // 일단 다 분으로 바꾸고, 바꾼 분에서 정렬까지 한 번 하고, 
-    const numBook = book_time.map(([a,b])=> {
-        const [aHour, aMinute] = a.split(":");
-        const [bHour, bMinute] = b.split(":");
+    const numBookArr = book_time.map(([start,end],index,array)=> {
+        const startHour = parseInt(start.split(":")[0]);
+        const startMinute = parseInt(start.split(":")[1]);
+        const totalStart = startHour * 60 + startMinute;
+        const endHour = parseInt(end.split(":")[0]);
+        const endMinute = parseInt(end.split(":")[1]);
+        const totalEnd = endHour * 60 + endMinute;
         
-        const aTotal = parseInt(aHour) * 60 + parseInt(aMinute);
-        const bTotal = parseInt(bHour) * 60 + parseInt(bMinute);
-        
-        return [aTotal,bTotal+10];
-    }).sort((a,b)=>a[0]-b[0]);
-    
-    console.log(numBook);
-    const queue = [];    
-    // 앞에서부터 10분씩 뒷단에 더해서 하나씩 확인하다가,
-    numBook.forEach(([start,end])=> {
+        return [totalStart,totalEnd+10];
+    })
+    numBookArr.sort((a,b)=> a[0]-b[0]);
+    // console.log(numBookArr);
+    const queue = [];
+    numBookArr.forEach(([start,end],index,array)=> {
         queue.push(end);
         queue.sort((a,b)=>a-b);
-        //앞 타임과 뒷 타임이 안 맞고 && 방이 부족하면, 방의 수를 늘리기
-        if(queue[0] > start && answer < queue.length) {
+        if(start < queue[0] && answer < queue.length) {
             answer++;
-        }else if(queue[0] <= start){
+        }else if(start >= queue[0]) {
             queue.shift();
-            // console.log("발동은 되나?")
         }
-        // console.log("queue",queue);
+        // console.log(queue);
     })
-    
-    
-    
     return answer;
 }
