@@ -3,12 +3,11 @@ function solution(numbers) {
     numbers.sort((a,b)=> {
         const aString = a.toString();
         const bString = b.toString();
-        const aFirstNum = parseInt(aString+bString)
-        const bFirstNum = parseInt(bString+aString);
-        return bFirstNum- aFirstNum  ;
+        const aFirst  =parseInt(aString + bString);
+        const bFirst = parseInt(bString + aString);
+        return bFirst - aFirst;
     })
-    if(numbers[0] === 0) {
-        return '0'
-    }
-    return numbers.join('');
+    answer = numbers.join("");
+    if(parseInt(answer) ===0) return "0"
+    return answer;
 }
