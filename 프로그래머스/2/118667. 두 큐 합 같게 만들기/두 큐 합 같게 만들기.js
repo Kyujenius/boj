@@ -1,41 +1,32 @@
 function solution(queue1, queue2) {
-    var answer = -2;
-    let sumOne = 0;
-    let sumTwo = 0;
-    queue1.forEach((value)=> {
-        sumOne+=value;
-    })
-    queue2.forEach((value)=> {
-        sumTwo += value;
-    })
-    let total  = sumOne + sumTwo;
-    if(total % 2 ===1) return -1;
-    let target  = total / 2;
+    var answer = -1;
+    let sum1 = queue1.reduce((acc,cur)=>acc+=cur);
+    let sum2 = queue2.reduce((acc,cur)=>acc+=cur);
+    const total = sum1+sum2;
     
-    // console.log(target);
-    const combinedQueue = [...queue1, ...queue2];
-    // console.log(combinedQueue);
-    let p1 = 0;
-    let p2 = queue1.length;
-    let count = 0 ;
-    let maxCount = queue1.length * 4;
-    //최대 횟수 옮겨도 안 되면 -1 리턴
-    while(count < maxCount) {
-         //queue1 에서 queue2로 옮길 때,
-        if(sumOne == target) return count;
-        if(sumOne > target) {
-            sumOne -= combinedQueue[p1];
-            const pushed = combinedQueue[p1];
-            p1 = (p1 + 1) % combinedQueue.length; // 원형 큐처럼 동작;
-            count++;
+    // console.log(sum1,sum2,total);
+    if(total % 2 !== 0) return -1;
+    const target = total/2;
+    let leftPtr = 0;
+    let rightPtr = queue1.length;
+    let count= 0;
+    
+    const combinedArr = [...queue1,...queue2];
+    while(count < queue1.length * 4) {
+        if(sum1 < target) {
+            sum1 += combinedArr[rightPtr];
+            rightPtr +=1;
+            rightPtr = rightPtr % (queue1.length *2)
+            count +=1;
+        }else if(sum1 > target){
+            sum1 -= combinedArr[leftPtr];
+            leftPtr +=1;
+            leftPtr = leftPtr % (queue1.length *2)
+            count +=1;
         }else {
-        //queue2 에서 queue1로 옮길 때
-            sumOne += combinedQueue[p2];
-            const pushed = combinedQueue[p2];
-            p2 = (p2 + 1) % combinedQueue.length; // 원형 큐처럼 동작;
-            count++;
+            return count;
         }
     }
-   
-    return -1;
+    
+    return answer;
 }
