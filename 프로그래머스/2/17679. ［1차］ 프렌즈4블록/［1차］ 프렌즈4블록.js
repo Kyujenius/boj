@@ -1,53 +1,54 @@
 function solution(m, n, board) {
     var answer = 0;
-    let map = board.map((line) => line.split(""));
+    const map = board.map((row)=>row.split(""));
+        
+    while(true) {
+        //map 에서 패턴 있는지 개수 세서 bingoMap에 넣기
+        const bingoMap = Array.from({length: m},()=>Array(n).fill(0));
 
-    while (true) {
-        const targets = [];
-
-        // 1. 2x2 매칭 블록 찾기
-        for (let i = 0; i < m - 1; i++) {
-            for (let j = 0; j < n - 1; j++) {
+        let bingoCount = 0;
+        for(let i = 0; i<m-1; i++){
+            for(let j = 0; j<n-1; j++) {
                 const char = map[i][j];
-                if (char !== '0' &&
-                    char === map[i][j + 1] &&
-                    char === map[i + 1][j] &&
-                    char === map[i + 1][j + 1]) {
-                    targets.push([i, j]);
+                if((char === map[i+1][j])&&
+                   (char === map[i][j+1])&&
+                   (char === map[i+1][j+1]) && (
+                char !== 0)
+                  ) {
+                    bingoMap[i][j] = 1;
+                    bingoMap[i][j+1] = 1;
+                    bingoMap[i+1][j] = 1;
+                    bingoMap[i+1][j+1] = 1;
+                    bingoCount+=1;
                 }
             }
         }
-
-        if (targets.length === 0) break;
-
-        // 2. 블록 제거 및 카운팅 (0으로 표시)
-        targets.forEach(([i, j]) => {
-            if (map[i][j] !== '0') { map[i][j] = '0'; answer++; }
-            if (map[i + 1][j] !== '0') { map[i + 1][j] = '0'; answer++; }
-            if (map[i][j + 1] !== '0') { map[i][j + 1] = '0'; answer++; }
-            if (map[i + 1][j + 1] !== '0') { map[i + 1][j + 1] = '0'; answer++; }
-        });
-
-        // 3. 중력 로직 (수정된 부분)
-        for (let j = 0; j < n; j++) {
+        //없으면 break
+        if(bingoCount === 0) break;
+        //있으면 그 bingoMap 을 통해서 다시 채우고 끝내기
+        // console.log(bingoMap)
+        for(let i = 0; i<n; i++) {
             const column = [];
-            // 해당 열에서 살아남은 블록만 순서대로 추출 (0 제외)
-            for (let i = 0; i < m; i++) {
-                if (map[i][j] !== '0') {
-                    column.push(map[i][j]);
+            let zeroCount = 0;
+            for(let j = m-1; j>=0; j--) {
+                if(bingoMap[j][i] === 0) {
+                    column.push(map[j][i]);    
+                }else {
+                    zeroCount++;
+                    answer++;
                 }
             }
-            
-            // 바닥(m-1)부터 위로 올라가며 블록 채우기
-            for (let i = m - 1; i >= 0; i--) {
-                // column의 마지막 요소(가장 아래에 있던 블록)를 꺼내서 바닥부터 채움
-                if (column.length > 0) {
-                    map[i][j] = column.pop(); 
-                } else {
-                    map[i][j] = '0'; // 더 이상 블록이 없으면 빈칸 처리
-                }
+            for(let k = 0; k<zeroCount; k++) {
+               column.push(0); 
             }
+            // console.log(column);
+            for(let k = 0; k<column.length; k++) {
+               map[column.length - k-1][i] = column[k]
+            }
+            // console.log(map);
         }
+
+        // break;
     }
     return answer;
 }
