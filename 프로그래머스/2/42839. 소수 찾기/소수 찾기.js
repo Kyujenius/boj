@@ -1,39 +1,36 @@
 function solution(numbers) {
     var answer = 0;
-    const numArray = numbers.split("");
-    console.log(numArray);
-    const visited = Array(numArray.length).fill(false);
-    console.log(visited);
-    const set = new Set();
-    function dfs(currentNum) {
-        for(let i = 0 ; i<numArray.length; i++) {
-            if(visited[i] == false) {
+    const splittedNumber = numbers.split("");
+    const n = splittedNumber.length;
+    const visited = Array(n).fill(false);
+    const result = new Set();
+    
+    recursiveFn("");
+    
+    function recursiveFn(currentString) {
+        const newNumber = parseInt(currentString);
+        if(newNumber > 0 && isPrime(newNumber) && !result.has(newNumber)) {
+            result.add(newNumber);
+            console.log(newNumber);
+        }
+        for(let i = 0; i<splittedNumber.length; i++) {
+            if(visited[i] ===false) {
                 visited[i] = true;
-                const newNum = currentNum + numArray[i];
-                const num = parseInt(newNum)
-                if(isPrime(num) && !set.has(num)) {
-                    set.add(num);
-                    console.log(num)
-                    answer++
-                }
-                dfs(newNum);   
+                recursiveFn(currentString + splittedNumber[i])
                 visited[i] = false;
             }
+        }    
+    }
+    
+    function isPrime(number) {
+        if(number < 2) return false;
+        if(number === 2) return true;
+        if(number === 3) return true;
+        for(let i = 2; i<=Math.sqrt(number); i++) {
+            if(number % i === 0) return false;
         }
-        
+        return true;
     }
-    dfs("");
-    return answer;
-}
-
-function isPrime(number) {
-    const sqrtNum = Math.sqrt(number);
-    if(number <2) {
-        return false;
-    }
-    if(number ==2 || number ==3) return true;
-    for(let i = 2; i<=sqrtNum; i++) {
-        if(number % i === 0) return false;
-    }
-    return true;
+    
+    return result.size;
 }
