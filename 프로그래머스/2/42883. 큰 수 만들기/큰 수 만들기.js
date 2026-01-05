@@ -1,20 +1,24 @@
 function solution(number, k) {
     var answer = '';
     const stack = [];
-    const numArray = number.split("");
+    const splittedNumber = number.split("").map((value)=>parseInt(value));
     
-    numArray.forEach((value) => {
-        //stack의 마지막 숫자보다 크고, k도 남아있어?
-        while(stack[stack.length-1] < value && k >0) {
-            stack.pop();
-            k--;        
+    for(let i = 0 ; i<splittedNumber.length; i++) {
+        if(stack.length === 0) {
+            stack.push(splittedNumber[i]);   
+        }else if(stack[stack.length-1] >= splittedNumber[i]) {
+            stack.push(splittedNumber[i]);
         }
-        stack.push(value);
-    })
-    for(let i = 0 ; i<k; i++) {
+        else{
+            while(stack[stack.length-1] < splittedNumber[i] && k>0) {
+                stack.pop();
+                k--;
+            }
+            stack.push(splittedNumber[i]);
+        }
+    }
+    for(let i=  0 ; i<k; i++) {
         stack.pop();
     }
-    answer = stack.join('');
-    
-    return answer;
+    return stack.join("");
 }
