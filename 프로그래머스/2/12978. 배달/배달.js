@@ -1,38 +1,45 @@
 function solution(N, road, K) {
     var answer = 0;
-    const graph = {};
-    const accDist = Array(N+1).fill(Infinity);
-    const queue = [];
-    road.forEach((value) => {
-        const [from,to,dist] = value;
-        if(graph[from] == undefined) {
-            graph[from] = [{to:to, dist:dist}];
-        }else {
-            graph[from].push({to:to, dist:dist});
-        }
-        if(graph[to] == undefined) {
-            graph[to] = [{to:from, dist:dist}];
-        }else {
-            graph[to].push({to:from, dist:dist});
-        }
+
+    const dist = Array(N+1).fill(Infinity);
+    const map = Array.from({length: N+1},()=>  [])
+    // console.log(dist);
+    
+    road.forEach(([from,to,cost])=>{
+        map[from].push({to : to,cost : cost});
+        map[to].push({to: from,cost : cost});
     })
-    console.log(graph);
-    accDist[1] = 0;
-    queue.push({to:1,dist:0});
-    while(queue.length>0){
-        const {to} =queue.pop();
-        graph[to].forEach((next)=> {
-            const acc = accDist[to] + next.dist;
-            if(accDist[next.to] > acc) {
-                accDist[next.to] = acc;
-                queue.push(next);
+    // console.log(map);
+    
+    dist[1] = 0;
+    const queue = [{to:1, cost:0}];
+    
+    while(queue.length>0) {
+        
+        //먼저 정렬 다익스트라니까
+        queue.sort((a,b)=>{
+            return a.cost- b.cost
+        });
+        const cur = queue.shift();
+        const current = cur.to;
+        const currentCost = cur.cost;
+        // console.log(current,currentCost);
+        map[current].forEach((next) => {
+            const finalCost = currentCost + next.cost;
+            if(finalCost < dist[next.to]) {
+                dist[next.to] = finalCost; 
+                queue.push({to: next.to, cost:finalCost});
             }
         })
     }
-    // console.log(accDist);
     
-    accDist.forEach((value) => {
-        if(value<= K) answer ++;
+    dist.forEach((value)=> {
+        if(value <=K) {
+            answer++;
+        }
     })
+    
+    
+    
     return answer;
 }
