@@ -1,28 +1,24 @@
 function solution(players, m, k) {
     var answer = 0;
-    let cap = 0;
+    let cap = 1;
     const queue = [];
-    players.forEach((player,index,array)=> {
-        // 반납 시간이면, 
-        if(queue.length >0 && queue[0][1] === index) {
-            const [증설횟수, 반납시간] = queue.shift();
-            cap-= 증설횟수;
+    // (증설되어있는 서버 * m < 현재 게임 이용자 수) 일 때, 서버 증설 및 queue 에 넣기
+    // queue의 구조 = [[증설된 수, 반납 시간]...]
+    players.forEach((player,index,array)=>{
+        //큐의 첫번째 시간이, 지금이라면?
+        if(queue.length >0 && queue[0][1] ==index) {
+            const [returnServer, returnTime] = queue.shift();
+            cap -= returnServer;
         }
+        const capacity = cap * m -1;
         
-        const capacity = cap * m;
-        //capacity 가 6이면
         if(player > capacity) {
-            const diff = player - capacity ;
-            const plusCap = Math.floor(diff /m)
-            cap += plusCap;
-            queue.push([plusCap,index+k]);
-            answer += plusCap;
+            const plusServer = Math.ceil((player - capacity)/ m);
+            answer +=plusServer;
+            cap += plusServer;
+            queue.push([plusServer,index+k]);
         }
         // console.log(queue);
     })
     return answer;
 }
-
-//각 players 가 있는 index 가 시간대    
-//m 보다 높다? (index + k) 까지 증설해두고있고, answer++;
-//queue 를 [[증설횟수, 반납 시간]...] 로 관리하자. 
