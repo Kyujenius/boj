@@ -1,44 +1,35 @@
 function solution(N, road, K) {
     var answer = 0;
-
     const dist = Array(N+1).fill(Infinity);
-    const map = Array.from({length: N+1},()=>  [])
-    // console.log(dist);
-    
-    road.forEach(([from,to,cost])=>{
-        map[from].push({to : to,cost : cost});
-        map[to].push({to: from,cost : cost});
+
+    dist[1]= 0;
+
+    const map = Array.from({length:N+1}, () => []);
+    road.forEach(([from,to,distance])=> {
+        map[from].push({to:to,distance:distance});
+        map[to].push({to:from,distance:distance});
     })
-    // console.log(map);
-    
-    dist[1] = 0;
-    const queue = [{to:1, cost:0}];
-    
-    while(queue.length>0) {
+    const queue = [{to:1,distance:0}];
+    while(queue.length > 0) {
+        queue.sort((a,b)=> a.distance - b.distance);
+        const currentObj = queue.shift();
+        const current = currentObj.to;
+        const currentDistance = currentObj.distance;
         
-        //먼저 정렬 다익스트라니까
-        queue.sort((a,b)=>{
-            return a.cost- b.cost
-        });
-        const cur = queue.shift();
-        const current = cur.to;
-        const currentCost = cur.cost;
-        // console.log(current,currentCost);
-        map[current].forEach((next) => {
-            const finalCost = currentCost + next.cost;
-            if(finalCost < dist[next.to]) {
-                dist[next.to] = finalCost; 
-                queue.push({to: next.to, cost:finalCost});
+        const nextArr = map[current];
+        nextArr.forEach((nextObj)=> {
+            const next = nextObj.to; // 갈 곳
+            const nextDistance = nextObj.distance; // 가는 길에 필요한 거리
+            const nextCost = currentDistance + nextDistance;
+            if(dist[next] > nextCost) {
+                dist[next] = nextCost;
+                queue.push({to:next, distance: nextCost});
             }
-        })
+        });
+        // console.log(dist, queue);
     }
     
-    dist.forEach((value)=> {
-        if(value <=K) {
-            answer++;
-        }
-    })
-    
+    return dist.filter((d) => d <= K).length;
     
     
     return answer;
