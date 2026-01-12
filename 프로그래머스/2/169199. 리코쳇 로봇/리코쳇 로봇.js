@@ -21,13 +21,16 @@ function solution(b) {
             let ny = y;
             
             while(
-                nx + dx[i] >= 0 && nx + dx[i] < b[0].length &&
-                ny + dy[i] >= 0 && ny + dy[i] < b.length &&
-                b[ny + dy[i]][nx + dx[i]] !== 'D'
+                nx>= 0 && nx< b[0].length &&
+                ny>= 0 && ny< b.length &&
+                b[ny][nx] !== 'D'
             ) {
                 nx += dx[i];
                 ny += dy[i];
             }
+            
+            ny-= dy[i];
+            nx-= dx[i];
             
             if(!visited[ny][nx]) {
                 visited[ny][nx] = true;
