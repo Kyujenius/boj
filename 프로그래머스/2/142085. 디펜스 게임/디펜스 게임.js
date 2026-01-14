@@ -1,24 +1,22 @@
 function solution(n, k, enemy) {
     var answer = 0;
-    //enemy 만큼 순회하며 k개만큼 채울 MinHeap을 돌린다.
-    const minHeap = new MinHeap();
-    for(let i=0; i<enemy.length; i++) {
-        minHeap.push(enemy[i]);
-        if(minHeap.size() > k) {
-            const popped = minHeap.pop();
-            n -= popped;
+    const heap = new MinHeap();
+
+    for(let i = 0 ; i<enemy.length; i++) {
+        // console.log(heap)
+        //k랑 같으면 빼버리기
+        heap.push(enemy[i]);   
+        if(heap.size() > k) {
+            n -= heap.pop();
         }
-        if(n <0) {
-            return i;
+          if(n < 0) {
+             return i;    
         }
-        // console.log(minHeap, n );
     }
-    
     return enemy.length;
 }
 
-//100만이니까 절대 O(n^2) 금지
-class MinHeap{
+class MinHeap {
     constructor() {
         this.heap = [];
     }
@@ -28,59 +26,57 @@ class MinHeap{
         this.bubbleUp();
     }
     
-    pop() {
-        if (this.heap.length === 0) return null;
-        if (this.heap.length === 1) return this.heap.pop(); // [수정 1] 요소가 1개일 때 바로 리턴
+    pop(){
+        if(this.heap.length === 0) return undefined;
+        if(this.heap.length === 1) return this.heap.pop();
         const popped = this.heap[0];
         this.heap[0] = this.heap.pop();
         this.bubbleDown();
         return popped;
     }
-    swap(a,b) {
-        [this.heap[a], this.heap[b]] = [this.heap[b],this.heap[a]]
+    
+    swap (a,b) {
+        [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
     }
+    
     bubbleUp() {
-        let lastIdx = this.heap.length -1;
+        let lastIdx = this.heap.length-1;
         while(true) {
-            let parentIdx = Math.ceil(lastIdx/2) -1;
-
+            let parentIdx = Math.ceil(lastIdx /2) -1;
             if(this.heap[lastIdx] < this.heap[parentIdx]) {
-               this.swap(lastIdx,parentIdx);
+                this.swap(lastIdx, parentIdx);
                 lastIdx = parentIdx;
             }else {
                 break;
             }
         }
     }
+    
     bubbleDown() {
         let index = 0;
-        const lastIdx = this.heap.length;   
-        while(index < lastIdx) {
+        while(true) {
             let leftIdx = index * 2 +1;
-            let rightIdx = index * 2 +2;
-            let swapIdx = null;
-            if(leftIdx <= lastIdx && this.heap[leftIdx] < this.heap[index]) {
-                swapIdx = leftIdx;
+            let rightIdx = index * 2 + 2;
+            const lastIdx = this.heap.length-1;
+            let smallestIdx = index;
+            
+            if((leftIdx <= lastIdx) &&
+               this.heap[leftIdx] < this.heap[smallestIdx]) {
+                smallestIdx = leftIdx;
             }
             
-            if((rightIdx <= lastIdx) &&
-                     (this.heap[rightIdx] < this.heap[index]) &&
-                     (this.heap[leftIdx] > this.heap[rightIdx])) {
-                swapIdx = rightIdx;
+            if(rightIdx <= lastIdx && this.heap[rightIdx] < this.heap[smallestIdx]) {
+                smallestIdx = rightIdx;
             }
             
-            if(swapIdx !== null) {
-                this.swap(index,swapIdx);
-                index = swapIdx;
-            }else{
-                break;
-            }
+            if(smallestIdx === index)  break;
+            
+            this.swap(index, smallestIdx);
+            index = smallestIdx;
+            
         }
-        
     }
-    
     size() {
         return this.heap.length;
     }
-    
 }
