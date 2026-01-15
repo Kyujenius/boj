@@ -1,57 +1,48 @@
-function solution(b) {
-    var answer = -1;
-    const [startX, startY] = findPosition("R");
-    const [goalX,goalY] = findPosition("G");
-    const queue = [[startX,startY,0]];
+function solution(board) {
+    var answer = 0;
+    // console.log(board);
     
-    const visited = Array.from({length: b.length}, () => Array(b[0].length).fill(false));
-    visited[startY][startX] = true;
-
-    while(queue.length > 0){
+    
+    const goal = findPosition("G");
+    const start = findPosition("R")
+    
+    const queue = [];
+    const visited = Array.from({length: board.length},()=> Array(board[0].length).fill(false));
+    queue.push([...start, 0]);
+    // console.log(queue);
+    while(queue.length > 0) {
         const [x,y,count] = queue.shift();
-        if(x === goalX && y === goalY) {
-            return count;
-        }
         
-        const dx = [-1,0,0,1];
-        const dy = [0,1,-1,0];
-        // 각 방향별로 끝까지 가보고, 벽이나, D를 만나면 멈추기!
-        for(let i= 0 ; i<4; i++) {
-            let nx = x;
-            let ny = y;
-            
-            while(
-                nx>= 0 && nx< b[0].length &&
-                ny>= 0 && ny< b.length &&
-                b[ny][nx] !== 'D'
-            ) {
+        if(x === goal[0] && y === goal[1]) return count;
+        
+        const dx = [-1,1,0,0];
+        const dy = [0,0,1,-1];
+        
+        for(let i=  0 ; i<4; i++) {
+            let nx = x + dx[i];
+            let ny = y + dy[i];
+            while((nx>=0 && nx <board[0].length) &&
+                 (ny>=0 && ny<board.length) &&
+                 board[ny][nx] !== 'D') {
                 nx += dx[i];
                 ny += dy[i];
             }
-            
-            ny-= dy[i];
-            nx-= dx[i];
-            
+            nx-=dx[i];
+            ny-=dy[i];
             if(!visited[ny][nx]) {
+                queue.push([nx,ny,count+1]);    
                 visited[ny][nx] = true;
-                queue.push([nx,ny,count+1]);
             }
-
         }
-        
-        
     }
     
-    
     function findPosition (char) {
-        const board = b.map((value) => value.split(""));
-        for(let i= 0 ; i<board.length; i++) {
-            for(let j = 0 ; j <board[0].length; j++) {
+        for(let i = 0 ; i<board.length; i++) {
+            for(let j = 0 ; j<board[0].length; j++) {
                 if(board[i][j] === char) return [j,i];
             }
         }
-    }    
-    
-    return answer;
+    }
+    return -1;
 }
 
