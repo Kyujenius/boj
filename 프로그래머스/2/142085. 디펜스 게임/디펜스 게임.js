@@ -1,20 +1,22 @@
 function solution(n, k, enemy) {
     var answer = 0;
-    const heap = new MinHeap();
-
-    for(let i = 0 ; i<enemy.length; i++) {
-        // console.log(heap)
-        //k랑 같으면 빼버리기
-        heap.push(enemy[i]);   
-        if(heap.size() > k) {
-            n -= heap.pop();
-        }
-          if(n < 0) {
-             return i;    
+    
+    const minHeap = new MinHeap();
+    
+    for(let i =0; i<enemy.length; i++) {
+        // console.log(minHeap);
+        minHeap.push(enemy[i]);
+        if(minHeap.size() > k) {
+            n -= minHeap.pop();
+            if(n < 0){
+                return i;
+            }
         }
     }
+    
     return enemy.length;
 }
+
 
 class MinHeap {
     constructor() {
@@ -26,7 +28,7 @@ class MinHeap {
         this.bubbleUp();
     }
     
-    pop(){
+    pop() {
         if(this.heap.length === 0) return undefined;
         if(this.heap.length === 1) return this.heap.pop();
         const popped = this.heap[0];
@@ -34,18 +36,20 @@ class MinHeap {
         this.bubbleDown();
         return popped;
     }
-    
-    swap (a,b) {
-        [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
+    size () {
+        return this.heap.length;
+    }
+    swap(a,b) {
+        [this.heap[a],this.heap[b]] = [this.heap[b], this.heap[a]];
     }
     
     bubbleUp() {
-        let lastIdx = this.heap.length-1;
+        let index = this.heap.length-1;
         while(true) {
-            let parentIdx = Math.ceil(lastIdx /2) -1;
-            if(this.heap[lastIdx] < this.heap[parentIdx]) {
-                this.swap(lastIdx, parentIdx);
-                lastIdx = parentIdx;
+            let parentIdx = Math.ceil(index/2)-1;
+            if(this.heap[parentIdx] > this.heap[index]) {
+                this.swap(parentIdx,index);
+                index = parentIdx;
             }else {
                 break;
             }
@@ -54,29 +58,25 @@ class MinHeap {
     
     bubbleDown() {
         let index = 0;
+        const lastIdx = this.heap.length-1;
         while(true) {
             let leftIdx = index * 2 +1;
-            let rightIdx = index * 2 + 2;
-            const lastIdx = this.heap.length-1;
+            let rightIdx = index * 2 +2;
             let smallestIdx = index;
-            
-            if((leftIdx <= lastIdx) &&
-               this.heap[leftIdx] < this.heap[smallestIdx]) {
+            if(leftIdx <= lastIdx && this.heap[leftIdx] < this.heap[index]) {
                 smallestIdx = leftIdx;
             }
             
-            if(rightIdx <= lastIdx && this.heap[rightIdx] < this.heap[smallestIdx]) {
+            if(rightIdx <= lastIdx && this.heap[leftIdx] > this.heap[rightIdx] && this.heap[rightIdx] < this.heap[index]) {
                 smallestIdx = rightIdx;
             }
             
-            if(smallestIdx === index)  break;
-            
-            this.swap(index, smallestIdx);
-            index = smallestIdx;
-            
+            if(smallestIdx === index) {
+                break;
+            }else {
+                this.swap(index, smallestIdx);
+                index = smallestIdx;
+            }
         }
-    }
-    size() {
-        return this.heap.length;
     }
 }
