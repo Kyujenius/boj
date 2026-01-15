@@ -1,32 +1,35 @@
 function solution(stones, k) {
-    let left = 1;
-    let right = 200000000;
+    var answer = 0;
     
-    function canJumpRoad (n) {
-        let cnt = 0;
-        for(let i = 0 ; i<stones.length ; i++) {
+    function canGo(n) {
+        let count = 0 ;
+        for(let i = 0 ; i<stones.length; i++ ) {
             if(stones[i] < n) {
-                cnt++;
-                if(cnt >= k) return false;
+                count++;
+                if(count >= k) {
+                    return false;
+                }
             }else {
-                cnt = 0;
-            }   
+                count = 0;
+            }
         }
-        
+    
         return true;
     }
     
+    let left =1;
+    let right = 200000000;
+    
     while(left<=right) {
         const mid = Math.floor((left+right)/2);
-        if(canJumpRoad(mid)) {
+        // console.log(mid);
+        if(canGo(mid) == true) {
             left = mid+1;
         }else {
-            right = mid-1;
+            right = mid -1;
         }
-        // console.log(mid);
     }
     
     return right;
 }
-
 
