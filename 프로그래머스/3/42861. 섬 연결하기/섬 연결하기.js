@@ -3,36 +3,37 @@ function solution(n, costs) {
     const map = {};
     costs.forEach(([from,to,cost])=> {
         if(map[from] === undefined) {
-            map[from] = [{to: to,cost : cost}];
-        }else {
-            map[from].push({to:to,cost:cost});
+            map[from] = [{to: to, cost:cost}];            
+        }else{
+            map[from].push({to: to, cost:cost});            
         }
         
         if(map[to] === undefined) {
-            map[to] = [{to: from, cost: cost}];
+            map[to] = [{to:from, cost: cost}];
         }else {
             map[to].push({to:from,cost:cost});
         }
-    })
+    });
     
-    console.log(map);
-    const queue = [{to:0,cost:0}];
-    const visited = Array(costs.length).fill(false);
+    const queue= [{to: 0, cost: 0}];
+    const visited = Array(Object.keys(map).length).fill(false);
+    // console.log(visited);
     while(queue.length > 0) {
         queue.sort((a,b)=>a.cost - b.cost);
-        const {to: current,cost:currentCost}= queue.shift();
-        // console.log(visited);
-        if(visited[current]) continue;
-        answer+= currentCost;
-        visited[current] = true;
+        // console.log(queue);
         
-        map[current].forEach(({to:next,cost:nextCost})=> {
-            if(!visited[next]) {
-                
-                queue.push({to:next,cost:nextCost});
-            }    
-        });
+        const {to: from, cost: currentCost} = queue.shift();
+        if(visited[from]) continue;
+        visited[from] = true;
+        answer+= currentCost
+        map[from].forEach(({to:to,cost:toCost})=> {
+            if(!visited[to]) {
+                queue.push({to:to,cost:toCost});
+            }
+        })
     }
+    
+    // console.log(map);
     
     return answer;
 }
