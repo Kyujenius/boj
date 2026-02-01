@@ -1,46 +1,44 @@
 function solution(tickets) {
     var answer = [];
     const map = {};
+    
     tickets.forEach(([from,to])=> {
         if(map[from] === undefined) {
-            map[from] = [to];
+            map[from] = [to];    
         }else{
-            map[from].push(to);
+            map[from].push(to);            
         }
     })
     
-
-    // console.log(map);
+    for(const key in map) {
+        map[key].sort();
+    }
     
-    function dfs(current,path) {
-        
-        if(answer.length>0) return;
-        
-        if(path.length === tickets.length+1) {
-            answer = path;
-            return;
+    console.log(map);
+    
+    function dfs(from,acc) {
+        if(acc.length === tickets.length +1) {
+          answer = acc;
+          return;
         }
         
-        const destinations = map[current];
+        const destination = map[from];
         
-        if(!destinations) return;
-        
-        for(let i=  0 ; i<destinations.length; i++) {
-            destinations.sort();
-            const next = destinations[i];
+        if(!destination) return; 
+        if(answer.length > 0) return;
+        for(let i = 0 ; i<destination.length; i++) {
+            const next = destination[i];
             
-            destinations.splice(i,1);
+            destination.splice(i,1);
             
-            dfs(next,[...path,next]);
+            dfs(next,[...acc,next]);
             
-            if(answer.length > 0) return;
-            
-            destinations.splice(i,0,next);
+            destination.splice(i, 0, next);
 
         }
-        
     }
     
     dfs("ICN",["ICN"]);
+    
     return answer;
 }
