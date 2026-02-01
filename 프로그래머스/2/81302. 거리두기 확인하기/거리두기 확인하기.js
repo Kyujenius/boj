@@ -1,62 +1,59 @@
-//["POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"]
 function solution(places) {
     var answer = [];
-    const n = 5;
-    const m = 5;
     places.forEach((place)=> {
         let isWrong = false;
-        for(let i = 0 ; i<n; i++) {
-            for(let j =  0 ; j<m; j++) {
-                if(place[i][j] === 'P') {
-                    if(bfs(i,j,place) === false) {
+        for(let i=0; i<place.length; i++) {
+            for(let j = 0; j<place[0].length; j++) {
+                if(place[i][j] === 'P'){
+                    //bfs 함수의 결과물은 true 면 isWrong 도 true
+                    if(bfs(i,j,place) === true) {
+                        // console.log('bfs 가 true');
                         isWrong = true;
                         break;
                     }
                 }
             }
-            if(isWrong === true){
-                break;
-            }
+            if(isWrong) break;
         }
         if(isWrong) {
-            answer.push(0);
-        }else{
-            answer.push(1);
+         answer.push(0);   
+        }else {
+        answer.push(1);    
         }
-    });
-    
-    
+        
+    })
     
     function bfs(y,x,place) {
         const queue = [[x,y,0]];
         const visited = Array.from({length:5},()=> Array(5).fill(false));
-        const dx = [-1,1,0,0];
-        const dy = [0,0,1,-1];
+        visited[y][x] = true;
         
-        while(queue.length > 0) {
-            const [x,y,count] = queue.shift();
-            visited[y][x] = true;
-            if(count >= 2) continue;
-            
+        const dx = [-1,1,0,0];
+        const dy = [0,0,-1,1];
+        let isBFSWrong = false;
+        
+        while(queue.length>0) {
+            const [currentX,currentY,count] = queue.shift();
+            if(count >=2) continue;            
             for(let i = 0; i<4; i++) {
-                const nx = dx[i] + x;
-                const ny = dy[i] + y;
-                if(nx >= 0 && nx <m && ny>=0 && ny <m && !visited[ny][nx]) {
+                const nx = dx[i] + currentX;
+                const ny = dy[i] + currentY;
+
+                if(nx >=0 && nx <place[0].length && ny >=0 && ny <place.length && !visited[ny][nx]) {
                     if(place[ny][nx] === 'P') {
-                        // console.log(`${x},${y} => ${nx},${ny}: false 리턴`)
-                        return false;
+                        isBFSWrong = true;
+                        return true;
                     }
                     if(place[ny][nx] === 'O') {
-                        visited[ny][nx] = true; 
-                        queue.push([nx,ny,count+1]);
+                        visited[ny][nx] = true;
+                        queue.push([nx,ny,count+1]);    
                     }
-                }
-                
-            }
-            // console.log(queue);
+                    
+                }    
+            }   
         }
-        return true;
-           
+        return isBFSWrong;
     }
+    
     return answer;
 }
