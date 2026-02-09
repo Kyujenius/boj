@@ -1,49 +1,57 @@
 function solution(jobs) {
+    let answer = 0 ;
     const priorityQueue = [];
-    let doingJob = null;
-    let deadTime = 0;
-    var answer = 0;
-    jobs.sort((a, b) => a[0] - b[0]);
     const length = jobs.length;
-    //for 문이 돌아가며 각 시점을 체크한다.
-    for(let i = 0; i<= 1000000; i++ ){
-        // console.log(`===========${i} 번째 시점===========`);
-        //jobs 가 있고,
-        //각 jobs 에서 요구하는 시작 시점이 지금 시점과 같으면 일단 priorityQueue 에 넣는다.
-        while (jobs.length > 0 && jobs[0][0] === i) {
-            priorityQueue.push(jobs.shift());
+    let doingJob = null;
+    // 일단 매초마다 돌아가는 for문 하나 두기
+    jobs.sort((a,b)=>a[0]-b[0])
+    for(let i = 0 ; i<1000000; i++) {
+        // console.log(`==========${i}=========`);
+        // 해당 for문 내에서 jobs[0][0] 이 i와 더이상 같지 않을때까지 shift() 해서 queue에다가 넣어두기 
+        while(jobs.length > 0 && jobs[0][0] == i) {
+            const [startTime, jobTime] = jobs.shift()
+            priorityQueue.push({startTime: startTime,jobTime: jobTime});
         }
-        
-        //priorityQeuue에서 요구사항에 맞게 정렬해둔다. (들어와있는 것들 대상으로 시간)
+        // 들어가있는 queue에서 시간이 짧은 것으로 정렬
         priorityQueue.sort((a,b)=> {
-            if(a[1]  === b[1]) {
-                return a[0] - b[0];
+            if(a.jobTime === b.jobTime) {
+                return a.startTime - b.startTime;
             }
-            return a[1] - b[1];
-        });
+            return a.jobTime - b.jobTime;
+        })
         
-        // console.log(`priorityQueue: ${priorityQueue}`);
+        // console.log(`priorityQueue : ${priorityQueue}`);
+        // console.log(`doingJob : ${doingJob}`);
+
         
-        //시작한 일이 있고, 죽을 때가 됐다면,
-        if(doingJob !== null && deadTime === i) {
-            // console.log(`deadJob: ${doingJob}, deadTime == i = ${deadTime}`);
-            answer += deadTime - doingJob[0];
-            // console.log(`answer += ${deadTime - doingJob[0]}`)
+        if(doingJob !== null && i === doingJob.endTime) {
+            // console.log(`answer 에다가 += ${doingJob.endTime - doingJob.startTime}`);
+            answer += (doingJob.endTime - doingJob.startTime);
             doingJob = null;
-            deadTime = 0;
         }
         
-        //비어있으면 넣는다. 
         if(doingJob === null && priorityQueue.length >0) {
-            doingJob = priorityQueue.shift();
-            deadTime = i + doingJob[1];
-            // console.log(`doingJob : ${doingJob}, deadTime = ${deadTime}`);
+            const {startTime: startDoingJob, jobTime: doingJobTime} = priorityQueue.shift();
+            doingJob = {
+                startTime : startDoingJob,
+                endTime : i + doingJobTime
+            };
         }
+        // 각 작업이 끝날 시점을 정해놓고, doingJob을 계속 돌리기 끝날 시점에는 걸린 시간 계산해서 넣어버리기 
+        // answer를 최종적으로 jobs의 길이로 나누기 
         
-        
-        
-        if(priorityQueue.length === 0 && jobs.length === 0 && doingJob == null) break;
+        if(jobs.length === 0 && priorityQueue.length === 0 && doingJob === null) break;
     }
-    return Math.floor(answer / length);
+    return Math.floor(answer / length) ; 
 }
-// 작업의 소요시간이 짧은 것, 작업의 요청 시각이 빠른 것, 작업의 번호가 작은 것 순으로 우선순위가 높습니다.
+
+
+
+
+
+
+
+
+
+
+
