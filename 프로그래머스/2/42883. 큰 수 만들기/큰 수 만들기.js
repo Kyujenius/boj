@@ -1,24 +1,27 @@
 function solution(number, k) {
     var answer = '';
     const stack = [];
-    const splittedNumber = number.split("").map((value)=>parseInt(value));
-    
-    for(let i = 0 ; i<splittedNumber.length; i++) {
-        if(stack.length === 0) {
-            stack.push(splittedNumber[i]);   
-        }else if(stack[stack.length-1] >= splittedNumber[i]) {
-            stack.push(splittedNumber[i]);
-        }
-        else{
-            while(stack[stack.length-1] < splittedNumber[i] && k>0) {
+    const numberArr = number.split("");
+    for(let i = 0 ; i<numberArr.length; i++) {
+        const number = numberArr[i];
+        //들어있는 게 있다면?
+        if(stack.length>0 && stack[stack.length-1] < number) {
+            // console.log('더 크긴해서 k: ', k);
+            while(stack[stack.length-1] < number && k>0) {
                 stack.pop();
                 k--;
-            }
-            stack.push(splittedNumber[i]);
-        }
+            } 
+            stack.push(number);
+            // console.log("뺴버리고 난 뒤 stack", stack);
+        }else {
+            stack.push(number);    
+            // console.log("그냥 채우고 난 뒤 stack", stack);
+        } 
+        // if(k ===0) break;
     }
-    for(let i=  0 ; i<k; i++) {
+    while(k>0) {
         stack.pop();
+        k--;
     }
     return stack.join("");
 }
