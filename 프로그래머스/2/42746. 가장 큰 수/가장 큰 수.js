@@ -1,13 +1,16 @@
 function solution(numbers) {
-    var answer = '';
     numbers.sort((a,b)=> {
         const aString = a.toString();
         const bString = b.toString();
-        const aFirst  =parseInt(aString + bString);
-        const bFirst = parseInt(bString + aString);
-        return bFirst - aFirst;
+        
+        const aFirst = aString + bString;
+        const bFirst = bString + aString;
+        
+        return parseInt(bFirst) - parseInt(aFirst);
     })
-    answer = numbers.join("");
-    if(parseInt(answer) ===0) return "0"
-    return answer;
+    
+    let final = numbers.join("");
+    final = final[0] === "0" ? "0" : final;
+
+    return final ;
 }
