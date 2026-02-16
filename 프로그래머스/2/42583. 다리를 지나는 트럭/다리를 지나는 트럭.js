@@ -1,29 +1,24 @@
 function solution(bridge_length, weight, truck_weights) {
-    var answer = 0;
     const bridge = Array(bridge_length).fill(0);
-    // console.log(bridge);
+    var answer = 1;
     const firstTruck = truck_weights.shift();
-    let currentWeight = 0;
-    bridge[bridge_length-1] = firstTruck;
-    currentWeight = firstTruck;
-    answer ++;
-    // 첫 트럭 올리고 시작
-    while(currentWeight>0) {
-        answer ++;
-        const shifted = bridge.shift();
-        currentWeight -= shifted;
-        //트럭이 남아있으면 넣어야지,
-        if(truck_weights.length > 0) {
-            //더 크면 못 올리고
-            if(weight - currentWeight < truck_weights[0]) {
-                bridge.push(0);
-            }else {
-            //작으면 올리고 하나씩 옮기고,
-                const newTruck = truck_weights.shift();
-                currentWeight += newTruck;
-                bridge.push(newTruck);
-            }
+    let capacity = weight - firstTruck;
+    bridge[bridge.length-1] = firstTruck;
+    
+    //트럭 다 비워져있고, capacity 라는 녀석이 최초 주어진 녀석이 아닐 때는 계속 ㄱㄱ
+    while(truck_weights.length > 0 || capacity !== weight) {
+        let getInTruck= 0;
+        const getOutTruck = bridge.shift();
+        capacity += getOutTruck;
+        if(capacity >= truck_weights[0]) {
+            getInTruck = truck_weights.shift();
+            capacity -= getInTruck;
+        }else {
+            getInTruck = 0;
         }
+        bridge.push(getInTruck);
+        answer++;
     }
+    
     return answer;
 }
