@@ -2,31 +2,41 @@ function solution(arr) {
     var answer = [0,0];
     let n = arr.length;
     
-    recursiveFn(0,0,n);
-    
-    function recursiveFn(startX, startY,n) {
-        const num = arr[startY][startX];
-        let isSuccess = true;
-        //처음부터 끝까지 살핀다.         
-        for(let i = 0 ; i<n; i++) {
-            for(let j = 0 ; j<n; j++) {
-                //가다가 다른 걸 확인해버린다? 
-                if(num !== arr[startY +i][startX + j]) {
-                    recursiveFn(startX, startY, n/2);
-                    recursiveFn(startX, startY+n/2, n/2);
-                    recursiveFn(startX+n/2, startY, n/2);
-                    recursiveFn(startX+n/2, startY+n/2, n/2);
-                    isSuccess = false;
-                    break;
-                }
-            }
-         if(!isSuccess) {
-            answer[num]-=1;
-            break;
-         }
+    const first = arr[0][0];
+    quardCompress(0,0,n);
+    function quardCompress(startX,startY,n) {
+        let isWrong = false;
+        const first = arr[startY][startX];
+        
+        if(n === 1) {
+            if(first === 1) answer[1] +=1;
+            if(first === 0) answer[0] +=1;
+            return;
         }
-        // console.log("끝",[startX,startY],n)
-        answer[num]+=1;
+        
+        for(let i = startY; i<startY+n; i++) {
+            for(let j = startX; j<startX+n; j++) {
+                if(first !==arr[i][j]) {
+                    quardCompress(startX,startY,n/2);
+                    quardCompress(startX,startY+n/2,n/2);
+                    quardCompress(startX+n/2,startY,n/2);
+                    quardCompress(startX+n/2,startY+n/2,n/2);
+                    isWrong = true;
+                }
+                if(isWrong) break;
+            }
+            if(isWrong) break;
+        }
+        
+        if(!isWrong) {
+            if(first === 1) answer[1] +=1;
+            if(first === 0) answer[0] +=1;    
+        }
+        
+
+        
+        
     }
+    
     return answer;
 }
