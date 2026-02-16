@@ -1,39 +1,42 @@
 function solution(numbers) {
     var answer = 0;
-    const numArray = numbers.split("");
-    // console.log(numArray);
-    const visited = Array(numArray.length).fill(false);
-    // console.log(visited);
-    const set = new Set();
-    function dfs(currentNum) {
-        for(let i = 0 ; i<numArray.length; i++) {
-            if(visited[i] == false) {
+    const n = numbers.length;
+    const numberArr = numbers.split("").map(Number);
+    //1부터 n자리의 모든 숫자 만들기 -> dfs
+    //모든 순열 만들기 + set 이용해서 최적화 하기
+    const permutationSet = new Set();
+    const visited = Array(n).fill(false);    
+
+    for(let maxCount = 1; maxCount<=n; maxCount++) {
+        getPermutation("",maxCount);
+    }
+    
+    function getPermutation(cur,count) {
+        const numCur = parseInt(cur);
+        if(cur.length === count && !permutationSet.has(numCur)) {
+            permutationSet.add(numCur);
+            if(isPrime(numCur) === true) {
+                // console.log(numCur);
+                answer++;
+            }
+            return cur;
+        }
+        for(let i = 0; i<numberArr.length; i++) {
+            if(!visited[i]) {
                 visited[i] = true;
-                const newNum = currentNum + numArray[i];
-                const num = parseInt(newNum)
-                if(isPrime(num) && !set.has(num)) {
-                    set.add(num);
-                    console.log(num)
-                    answer++
-                }
-                dfs(newNum);   
+                getPermutation(cur+numberArr[i],count,visited);
                 visited[i] = false;
             }
         }
-        
     }
-    dfs("");
+    
+    function isPrime(number) {
+        if(number < 2) return false;
+        for(let i = 2; i<=Math.sqrt(number); i++) {
+            if(number % i === 0) return false;
+        }
+        return true;
+    }
+    
     return answer;
-}
-
-function isPrime(number) {
-    const sqrtNum = Math.sqrt(number);
-    if(number <2) {
-        return false;
-    }
-    if(number ==2 || number ==3) return true;
-    for(let i = 2; i<=sqrtNum; i++) {
-        if(number % i === 0) return false;
-    }
-    return true;
 }
