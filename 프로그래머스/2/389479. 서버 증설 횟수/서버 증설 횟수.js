@@ -1,24 +1,29 @@
 function solution(players, m, k) {
     var answer = 0;
-    let cap = 1;
-    const queue = [];
-    // (증설되어있는 서버 * m < 현재 게임 이용자 수) 일 때, 서버 증설 및 queue 에 넣기
-    // queue의 구조 = [[증설된 수, 반납 시간]...]
-    players.forEach((player,index,array)=>{
-        //큐의 첫번째 시간이, 지금이라면?
-        if(queue.length >0 && queue[0][1] ==index) {
-            const [returnServer, returnTime] = queue.shift();
-            cap -= returnServer;
-        }
-        const capacity = cap * m -1;
+    let playerIdx = 0;
+    const dynamicServer = [];
+    let capacity = 0;
+    while (playerIdx < players.length) {
+        // console.log(`------${playerIdx}------`);
+        // console.log(dynamicServer);
+        const player = players[playerIdx];
         
-        if(player > capacity) {
-            const plusServer = Math.ceil((player - capacity)/ m);
-            answer +=plusServer;
-            cap += plusServer;
-            queue.push([plusServer,index+k]);
+        if(dynamicServer.length > 0  && dynamicServer[0][1] === playerIdx) {
+            const [number, index] = dynamicServer.shift();
+            capacity -= number;
         }
-        // console.log(queue);
-    })
+        
+        //player 수가 지금 내가 넣어둔 capacity 보다 + m 보다도 더 크면
+        if((capacity+1) * m <= player) {
+            const addCap = Math.floor((player - (capacity) * m )/m);
+            answer+= addCap;
+            capacity += addCap;
+            
+            dynamicServer.push([addCap,playerIdx + k]);
+        }
+        playerIdx++;
+        
+        
+    }
     return answer;
 }
