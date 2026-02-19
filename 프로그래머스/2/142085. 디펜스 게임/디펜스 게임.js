@@ -1,82 +1,85 @@
 function solution(n, k, enemy) {
-    var answer = 0;
-    
-    const minHeap = new MinHeap();
-    
-    for(let i =0; i<enemy.length; i++) {
-        // console.log(minHeap);
-        minHeap.push(enemy[i]);
-        if(minHeap.size() > k) {
-            n -= minHeap.pop();
-            if(n < 0){
-                return i;
-            }
+    var answer = enemy.length;
+    const prq = new MinHeap(k);
+    console.log(prq);
+    for(let i = 0 ; i < enemy.length; i++) {
+        const value = enemy[i];
+        const index = i;
+        // console.log(`---------${index}-------`);
+        // console.log(prq);
+        if(prq.queue[0] < value) {
+            const lightEnemy = prq.shift();
+            prq.push(value);
+            n -= lightEnemy;
+        }else {
+            n -= value;
+        }
+        if(n < 0) {
+            answer = index
+            // console.log('리턴해!')
+            return answer;
         }
     }
-    
-    return enemy.length;
+    return answer;
 }
 
-
 class MinHeap {
-    constructor() {
-        this.heap = [];
+    constructor(n) {
+        this.queue = Array(n).fill(0);
     }
     
     push(value) {
-        this.heap.push(value);
+        this.queue.push(value);
         this.bubbleUp();
+        // console.log(this.queue);
     }
-    
-    pop() {
-        if(this.heap.length === 0) return undefined;
-        if(this.heap.length === 1) return this.heap.pop();
-        const popped = this.heap[0];
-        this.heap[0] = this.heap.pop();
+    shift() {
+        if(this.queue.length ===0) return undefined;
+        if(this.queue.length ===1) return this.queue.pop();
+        
+        const popped = this.queue[0];
+        this.queue[0] = this.queue.pop();
         this.bubbleDown();
+        // console.log(this.queue);
         return popped;
     }
-    size () {
-        return this.heap.length;
-    }
     swap(a,b) {
-        [this.heap[a],this.heap[b]] = [this.heap[b], this.heap[a]];
+        [this.queue[a], this.queue[b]] = [this.queue[b],this.queue[a]];
     }
     
     bubbleUp() {
-        let index = this.heap.length-1;
-        while(true) {
-            let parentIdx = Math.ceil(index/2)-1;
-            if(this.heap[parentIdx] > this.heap[index]) {
-                this.swap(parentIdx,index);
-                index = parentIdx;
-            }else {
-                break;
-            }
+        let idx = this.queue.length-1;
+        let rootIdx = Math.floor((idx-1)/2);
+        while(this.queue[idx] < this.queue[rootIdx]) {
+            this.swap(idx,rootIdx);
+            idx = rootIdx
+            rootIdx = Math.floor((idx-1)/2);
         }
     }
     
     bubbleDown() {
-        let index = 0;
-        const lastIdx = this.heap.length-1;
+        const length = this.queue.length;
+        let idx = 0;
+        let leftIdx = idx * 2 +1;
+        let rightIdx = idx * 2 +2;
+        let swapIdx = null;
         while(true) {
-            let leftIdx = index * 2 +1;
-            let rightIdx = index * 2 +2;
-            let smallestIdx = index;
-            if(leftIdx <= lastIdx && this.heap[leftIdx] < this.heap[index]) {
-                smallestIdx = leftIdx;
+            //왼쪽 요소가 살아있고, 
+            if(length >= leftIdx && this.queue[leftIdx] < this.queue[idx]) {
+                swapIdx = leftIdx;
+            }
+            if(length >= rightIdx && this.queue[leftIdx] > this.queue[rightIdx] && this.queue[rightIdx] < this.queue[idx]) {
+                swapIdx = rightIdx;
             }
             
-            if(rightIdx <= lastIdx && this.heap[leftIdx] > this.heap[rightIdx] && this.heap[rightIdx] < this.heap[index]) {
-                smallestIdx = rightIdx;
-            }
+            if(swapIdx === null) break;
             
-            if(smallestIdx === index) {
-                break;
-            }else {
-                this.swap(index, smallestIdx);
-                index = smallestIdx;
-            }
+            this.swap(swapIdx,idx);
+            idx = swapIdx;
+            leftIdx = idx * 2 +1;
+            rightIdx = idx * 2 +2;
+            swapIdx = null;
         }
     }
+    
 }
