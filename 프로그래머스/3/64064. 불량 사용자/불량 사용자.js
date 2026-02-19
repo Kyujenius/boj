@@ -1,39 +1,44 @@
 function solution(user_id, banned_id) {
     var answer = 0;
-    //banned_id 에 맞는 user_id 들을 
+    const matchedSet = new Set();
     const visited = Array(user_id.length).fill(false);
-    const set = new Set();
     
-    //visited 가 아니고, isMatched 도 true 면 dfs 한 번 더
-    function dfs(index){
-        if(index == banned_id.length) {
-            const filteredUser = user_id.filter((value,idx)=> visited[idx]);
-            const newUser = filteredUser.sort().join(',');
-            set.add(newUser);
+    function dfs(idx) {
+        if(idx === banned_id.length) {
+            const currentSet = user_id.filter((_, i) => visited[i]).sort().join(",");
+            matchedSet.add(currentSet);
             return;
-        };
-        
-        user_id.forEach((value,idx)=> {
-            if(!visited[idx] && isMatched(value,banned_id[index])) {
-                visited[idx] = true;
-                dfs(index+1);
-                visited[idx] = false;
-            }     
-        })
+        }
+        const bannedId = banned_id[idx];
+        for(let i = 0; i<user_id.length; i++) {
+            const userId = user_id[i];
+            if(isMatched(userId,bannedId) && !visited[i]) {
+                visited[i] = true;
+                dfs(idx+1);
+                visited[i] = false;
+            }    
+        }
     }
+    
     dfs(0);
     
-    return set.size;
+    return matchedSet.size;
 }
 
-function isMatched(a,b) {
-    if(a.length !== b.length) return false;
 
-    for(let i =0; i<a.length; i++) {
-        if(a[i] !== b[i] && b[i] !== '*') {
-            return false;
-        }            
+//불량 사용자 아이디를 기준으로 match 하는지 확인
+function isMatched (strA,strB) {
+    if(strA.length === strB.length) {
+        for(let i = 0 ; i<strA.length; i++) {
+            if(strB[i] !== "*") {
+                if(strA[i] !== strB[i]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }else {
+        return false;
     }
-
-    return true;
 }
+//match 한지 확인하고, match 하면 visited 로 표시
