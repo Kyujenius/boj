@@ -1,49 +1,55 @@
 function solution(board) {
     var answer = 0;
-    const n = board.length;
-    // dist[y][x][direction]: (y,x)에 direction 방향으로 도달했을 때의 최소 비용
-    // 방향: 0(상), 1(하), 2(좌), 3(우)
-    const dist = Array.from({ length: n }, () =>
-        Array.from({ length: n }, () => Array(4).fill(Infinity))
-    );
-    // console.log(dist);
+    //각기 다른 방향을 통해 접근하는 경우의 최소비용을 dp 에 넣거나, dikstra 알고리즘으로 덮을 수 있게끔 구성 
     
-    const queue = [];
-    //direction 먼저 정하기 상(0), 하(1), 좌(2), 우(3),
-    if(board[0][1] == 0) {
-        queue.push([0,1,3,100]);
-        dist[0][1][3] = 100;
+    //아래 : 0, 오른쪽: 1, 위: 2, 왼쪽: 3
+    //queue1은 아래로 가면서 시작
+    const N = board.length;
+    const dx = [0,1,0,-1];
+    const dy = [1,0,-1,0];
+    const price = Array.from({length: N}, ()=> Array.from({length: N}, () => Array(4).fill(Infinity)));
+                             
+    const queue =  [];
+    //오른쪽 갈때
+    if(board[0][1] === 0) {
+        queue.push([0,1,1,100]);
+        price[0][1][1] = 100;
     }
-    if(board[1][0] == 0) {
-        queue.push([1,0,1,100]);
-        dist[1][0][1] = 100;
+    //아래 갈 때
+    if(board[1][0] === 0) {
+        queue.push([1,0,0,100]);
+        price[1][0][0] = 100;
     }
-    
-    while(queue.length>0) {
+    let idx = 0;
+    while(queue.length > 0) {
         // console.log(queue);
-        const [y,x,dir,cost] = queue.shift();
-        
-        if(cost > dist[y][x][dir]) continue;
-        
-        const dx = [0,0,-1,1];
-        const dy = [-1,1,0,0];
-        
-        for(let i = 0; i<4; i++) {
+        //x,y,이전 방향, 비용
+        const [y,x,direction,count] = queue.shift();
+        for(let i = 0 ; i<4; i++) {
             const nx = dx[i] +x;
             const ny = dy[i] +y;
-            const newCost = i === dir ? cost+100 : cost+600 ;
-            if(
-               (nx >= 0 && nx < n) &&
-               (ny >= 0 && ny < n) &&
-               (dist[ny][nx][i] > newCost) &&
-               (board[ny][nx] == 0)
-              ) {
-                queue.push([ny,nx,i,newCost]);
-                dist[ny][nx][i] = newCost;
+            if((nx>= 0  && nx<N) 
+               && (ny >=0 && ny<N) 
+               && (board[ny][nx] === 0)
+               //가려는 곳보다 100원
+               ){
+                let dirCount = count + (direction === i ? 100 : 600);
+                if(price[ny][nx][i] > dirCount) {
+                    price[ny][nx][i] = dirCount;
+                    queue.push([ny,nx,i,dirCount])                   
+                }
+ 
             }
         }
+        
     }
-    // console.log(dist);
-    answer = Math.min(dist[n-1][n-1][0],dist[n-1][n-1][1],dist[n-1][n-1][2],dist[n-1][n-1][3])
+    answer = Math.min(...price[N-1][N-1]);
     return answer;
 }
+
+
+//출발점은 (0, 0) 칸(좌측 상단)이며, 도착점은 (N-1, N-1) 칸(우측 하단)
+
+//직선 도로 하나를 만들 때는 100원이 소요되며, 코너를 하나 만들 때는 500원이 추가로 듭니다.
+
+
