@@ -1,21 +1,38 @@
 function solution(n) {
     var answer = [];
-    
-    function hanoi(num,from,mid,to) {
-        if(num === 1) {
-            answer.push([from,to]);
-            return
+    function hanoi(n,from,to) {
+        if(n === 1) answer.push([from+1,to+1]);
+        else if(from === 1&& to ===2) {
+            hanoi(n-1,1,0);
+            hanoi(1,1,2);
+            hanoi(n-1,0,2);
+        }else if(from ===2 && to ===1) {
+            hanoi(n-1,2,0);
+            hanoi(1,2,1);
+            hanoi(n-1,0,1);           
         }
-        // num-1 같의 하노이를 mid 까지 옮기기
-        hanoi(num-1,from,to,mid);
-        
-        // 쿵, 가장 큰 숫자를 to 쪽으로 옮기기
-        answer.push([from,to]);
-        
-        // mid에 옮겨뒀던 것들 다시 to로 옮기기
-        hanoi(num-1,mid,from,to);
+        else if(from ===2 && to ===0) {
+            hanoi(n-1,2,1);
+            hanoi(1,2,0);
+            hanoi(n-1,1,0);           
+        }
+        else if(from ===1 && to ===0) {
+            hanoi(n-1,1,2);
+            hanoi(1,1,0);
+            hanoi(n-1,2,0);           
+        }
+        else if(from ===0 && to ===2) {
+            hanoi(n-1,0,1);
+            hanoi(1,0,2);
+            hanoi(n-1,1,2);           
+        }
+        else if(from ===0 && to ===1) {
+            hanoi(n-1,0,2);
+            hanoi(1,0,1);
+            hanoi(n-1,2,1);           
+        }
     }
     
-    hanoi(n,1,2,3)
+    hanoi(n,0,2);
     return answer;
 }
